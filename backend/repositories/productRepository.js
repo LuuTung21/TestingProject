@@ -10,7 +10,7 @@ class ProductRepository {
     async getProductById(id) {
         return await Product.findById(id);
     };
-    async UpdateProduct(id, data) {
+    async updateProduct(id, data) {
         return await Product.findByIdAndUpdate(id, data);
     };
     async deleteProduct(id) {
