@@ -10,7 +10,8 @@ class productController {
             const product = await productRepository.createProduct(req.body);
             res.status(201).json(product);
         } catch (err) {
-            res.status(500).json({ error: err.message ? err.message : "Unable to create the product" })
+            const errorMessage = err.message === "Product already exists" ? "Product already exists" : "Unable to create the product"
+            res.status(500).json({ error: errorMessage });
         }
     };
 
