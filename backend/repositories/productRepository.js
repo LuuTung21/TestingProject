@@ -2,6 +2,10 @@ import Product from "../models/productModel.js";
 
 class ProductRepository {
     async createProduct(data) {
+        const existProduct = Product.findOne({ name: data.name });
+        if (existProduct) {
+            throw new Error("Product already exists")
+        }
         return await Product.create(data);
     };
     async getAllProduct() {
