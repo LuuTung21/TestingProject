@@ -5,10 +5,10 @@ class userRepository {
     async authUser(data) {
         const { email, password } = data;
         const user = await User.findOne({ email });
-        if (!user) {
-            throw new Error("Invalid email or password");
-        } else {
+        if (user && await user.matchPassword(password)) {
             return user;
+        } else {
+            throw new Error("Invalid email or password");
         };
     };
 

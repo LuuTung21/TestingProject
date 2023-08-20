@@ -9,7 +9,6 @@ class userController {
     async authUser(req, res) {
         try {
             const user = await userRepository.authUser(req.body);
-            console.log(user);
             res.status(201).json(user);
         } catch (err) {
             res.status(500).json({ error: err.message });
