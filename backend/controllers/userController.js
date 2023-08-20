@@ -2,76 +2,67 @@ import User from "../models/userModel.js";
 import userRepository from "../repositories/userRepository.js";
 
 class userController {
+
+    // @desc Authenticate User
+    // POST /api/users/auth
+    // access public
     async authUser(req, res) {
         try {
-            const result = userRepository.authUser(req.body);
-            return result;
-        } catch (error) {
-            return res.status(500).json({ error: "Unable to log in" });
+            const user = await userRepository.authUser(req.body);
+            console.log(user);
+            res.status(201).json(user);
+        } catch (err) {
+            res.status(500).json({ error: err.message });
         };
     };
+
+    // @desc Register User
+    // POST /api/users
+    // access public
     async registerUser(req, res) {
         try {
-            const { name, email, password } = req.body;
-            const userExit = User.findOne({ email });
-
-            if (userExit) {
-                return res.status(400).json({ error: "User already exists" });
-            }
-
-            const newUser = await User.create({ name, email, password });
-
-            if (newUser) {
-                return res.status(201).json(newUser);
-            } else {
-                return res.status(401).json({ error: "Invalid information" });
-            };
-        } catch (error) {
-            return res.status(500).json({ error: "Unable to register" })
+            const newUser = await userRepository.registerUser(req.body);
+            res.status(201).json(newUser);
+        } catch (err) {
+            res.status(500).json({ error: err.message })
         }
-
     };
+
+    // @desc Logout User
+    // POST /api/users/logout
+    // access private
     async logoutUser(req, res) {
         try {
-            res.cookie("jwt", "", {
-                httpOnly: true,
-                expires: new Date(0)
-            });
-            return res.status(200).json({ message: "User Logged Out" });
+            await userRepository.logoutUser(res);
+            res.status(200).json({ message: "User Logged Out" });
         } catch (error) {
-            return res.status(500).json({ error: "Unable to log out" });
+            res.status(500).json({ error: "Unable to log out" });
         }
     };
+
+    // @desc Get User Profile
+    // GET /api/users/profile
+    // access private
     async getUserProfile(req, res) {
         try {
-            const user = await User.findById(id);
-            if (!user) {
-                return res.status(404).json({ error: "User not found" });
-            } else {
-                return res.json(user);
-            }
-        } catch (error) {
-            return res.status(500).json({ error: "Unable to find User" })
+            const user = await User.findById(req.query.id);
+            res.status(200).json(user)
+        } catch (err) {
+            res.status(500).json({ error: err.message })
         }
     }
-    async updateUserProfile(id, data) {
+
+    // @desc Update User
+    // PUT /api/users/profile
+    // access private
+    async updateUserProfile(req, res) {
         try {
-            const { name, email, password } = data
-            const user = await User.findById(id);
-            if (!user) {
-                return res.status(404).json({ error: "User not found" });
-            } else {
-                user.name = name || user.name;
-                user.email = email || user.email;
-
-                if (password) {
-                    user.password = password;
-                };
-
-                return res.json(user);
-            }
-        } catch (error) {
-            return res.status(500).json({ error: "Unable to update user" })
+            const updateUser = await userRepository.updateUserProfile(req.query.id, req.body);
+            res.status(201).json(updateUser);
+        } catch (err) {
+            res.status(500).json({ error: err.meesage })
         }
     };
 };
+
+export default new userController();

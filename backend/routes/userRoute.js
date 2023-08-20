@@ -7,15 +7,15 @@ const router = express.Router();
 router.post("/auth", userController.authUser);
 
 // Register User
-router.post("/", registerUser);
+router.post("/", userController.registerUser);
 
 // Logout User
-router.post("/logout", logoutUser);
+router.post("/logout", userController.logoutUser);
 
 // Get user's profile & Update user's profile
 router
     .route("/profile")
-    .get(getUserProfile)
-    .put(updateUserProfile);
+    .get(userController.getUserProfile)
+    .put(userController.updateUserProfile);
 
 export default router;
