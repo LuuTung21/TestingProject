@@ -8,7 +8,7 @@ class userController {
     // access public
     async authUser(req, res) {
         try {
-            const user = await userRepository.authUser(req.body);
+            const user = await userRepository.authUser(res, req.body);
             res.status(201).json(user);
         } catch (err) {
             res.status(500).json({ error: err.message });
@@ -20,7 +20,7 @@ class userController {
     // access public
     async registerUser(req, res) {
         try {
-            const newUser = await userRepository.registerUser(req.body);
+            const newUser = await userRepository.registerUser(res, req.body);
             res.status(201).json(newUser);
         } catch (err) {
             res.status(500).json({ error: err.message })
