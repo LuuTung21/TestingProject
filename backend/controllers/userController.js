@@ -1,67 +1,72 @@
 import User from "../models/userModel.js";
 import userRepository from "../repositories/userRepository.js";
+import asyncHandler from "express-async-handler";
 
 class userController {
 
     // @desc Authenticate User
     // POST /api/users/auth
     // access public
-    async authUser(req, res) {
+    authUser = asyncHandler(async (req, res) => {
         try {
             const user = await userRepository.authUser(res, req.body);
             res.status(201).json(user);
         } catch (err) {
-            res.status(500).json({ error: err.message });
+            if (!err.message) {
+                err.message = "Unable to log in";
+            };
+            res.status(500);
+            throw new Error("Invalid email or password")
         };
-    };
+    });
 
     // @desc Register User
     // POST /api/users
     // access public
-    async registerUser(req, res) {
+    registerUser = asyncHandler(async (req, res) => {
         try {
             const newUser = await userRepository.registerUser(res, req.body);
             res.status(201).json(newUser);
         } catch (err) {
-            res.status(500).json({ error: err.message })
+            throw new Error(err.message);
         }
-    };
+    });
 
     // @desc Logout User
     // POST /api/users/logout
     // access private
-    async logoutUser(req, res) {
+    logoutUser = asyncHandler(async (req, res) => {
         try {
             await userRepository.logoutUser(res);
             res.status(200).json({ message: "User Logged Out" });
         } catch (error) {
-            res.status(500).json({ error: "Unable to log out" });
-        }
-    };
+            throw new Error("Unable to log out");
+        };
+    });
 
     // @desc Get User Profile
     // GET /api/users/profile
     // access private
-    async getUserProfile(req, res) {
+    getUserProfile = asyncHandler(async (req, res) => {
         try {
             const user = await User.findById(req.query.id);
             res.status(200).json(user)
         } catch (err) {
-            res.status(500).json({ error: err.message })
+            throw new Error(err.message)
         }
-    }
+    })
 
     // @desc Update User
     // PUT /api/users/profile
     // access private
-    async updateUserProfile(req, res) {
+    updateUserProfile = asyncHandler(async (req, res) => {
         try {
             const updateUser = await userRepository.updateUserProfile(req.query.id, req.body);
             res.status(201).json(updateUser);
         } catch (err) {
-            res.status(500).json({ error: err.meesage })
+            throw new Error(err.message)
         }
-    };
+    });
 };
 
 export default new userController();

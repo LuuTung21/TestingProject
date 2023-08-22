@@ -10,17 +10,22 @@ class userRepository {
             generateToken(res, user._id);
             return user;
         } else {
-            throw new Error("Invalid email or password");
+            throw new Error();
         };
     };
 
     async registerUser(res, data) {
         const { name, email, password } = data;
+
+        if (!name || !email || !password) {
+            throw new Error("Invalid information");
+        };
+
         const userExit = await User.findOne({ email });
 
         if (userExit) {
             throw new Error("User already exists")
-        }
+        };
 
         const newUser = await User.create({ name, email, password });
 
@@ -28,7 +33,7 @@ class userRepository {
             generateToken(res, newUser._id);
             return newUser;
         } else {
-            throw new Error("Invalid information")
+            throw new Error("Unable to register")
         };
     };
 
@@ -40,20 +45,35 @@ class userRepository {
     };
 
     async getUserProfile(id) {
-        const user = await User.findById(id);
-        if (!user) {
-            throw new Error("User not found")
-        } else {
-            return user
-        }
-    }
 
-    async updateUserProfile(id, data) {
+        if (!id) {
+            throw new Error("Invalid Information");
+        };
+
         const user = await User.findById(id);
         if (!user) {
             throw new Error("User not found");
         } else {
-            const updateUser = User.findByIdAndUpdate(id, data)
+            return user;
+        };
+    };
+
+    async updateUserProfile(id, data) {
+        const { name, email, password } = data;
+
+        if (!id || !name || !email || !password) {
+            throw new Error("Invalid Information");
+        };
+
+        const user = await User.findById(id);
+        if (!user) {
+            throw new Error("User not found");
+        }
+
+        const updateUser = User.findByIdAndUpdate(id, { name, email, password });
+        if (!updateUser) {
+            throw new Error("Unable to update user");
+        } else {
             return updateUser;
         }
     };
