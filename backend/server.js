@@ -9,8 +9,11 @@ import { notFound, errorHandler } from "./middleware/errorHandler.js";
 
 const port = process.env.PORT || 5000;
 
-connectDB(process.env.PRODUCT_MONGO_URL);
-connectDB(process.env.USER_MONGO_URL);
+// Connect to the first database (PRODUCT_MONGO_URL)
+const connectionForProductDB = connectDB(process.env.PRODUCT_MONGO_URL);
+
+// Connect to the second database (USER_MONGO_URL)
+const connectionForUserDB = connectDB(process.env.USER_MONGO_URL);
 
 const app = express();
 
@@ -20,7 +23,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use("/api/products", productRoutes);
-app.use("/api/users", userRoutes);
+app.use("/api/users", userRoutes(connectionForUserDB));
 
 app.use(notFound);
 app.use(errorHandler)
