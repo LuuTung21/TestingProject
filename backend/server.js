@@ -10,7 +10,7 @@ import { notFound, errorHandler } from "./middleware/errorHandler.js";
 const port = process.env.PORT || 5000;
 
 connectDB(process.env.PRODUCT_MONGO_URL);
-// connectDB(process.env.USER_MONGO_URL);
+connectDB(process.env.USER_MONGO_URL);
 
 const app = express();
 

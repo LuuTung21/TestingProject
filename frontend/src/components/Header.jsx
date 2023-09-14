@@ -8,7 +8,7 @@ const Header = () => {
     return (
         <Navbar bg="light" expand="lg" className="px-4">
             <LinkContainer to="/">
-                <Navbar.Brand >
+                <Navbar.Brand>
                     Shoppable
                 </Navbar.Brand>
             </LinkContainer>
