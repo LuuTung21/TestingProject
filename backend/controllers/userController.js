@@ -16,7 +16,7 @@ class userController {
                 err.message = "Unable to log in";
             };
             res.status(500);
-            throw new Error("Invalid email or password")
+            throw new Error("Invalid email or password");
         };
     });
 
@@ -50,9 +50,9 @@ class userController {
     getUserProfile = asyncHandler(async (req, res) => {
         try {
             const user = await User.findById(req.query.id);
-            res.status(200).json(user)
+            res.status(200).json(user);
         } catch (err) {
-            throw new Error(err.message)
+            throw new Error(err.message);
         }
     })
 
@@ -64,7 +64,7 @@ class userController {
             const updateUser = await userRepository.updateUserProfile(req.query.id, req.body);
             res.status(201).json(updateUser);
         } catch (err) {
-            throw new Error(err.message)
+            throw new Error(err.message);
         }
     });
 };

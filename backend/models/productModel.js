@@ -7,6 +7,8 @@ const productSchema = new mongoose.Schema({
     created_at: { type: Date, default: Date.now }
 });
 
-const Product = mongoose.model("Product", productSchema);
+const myDB = mongoose.connection.useDb("products")
+
+const Product = myDB.model("Product", productSchema);
 
 export default Product;

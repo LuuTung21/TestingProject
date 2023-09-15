@@ -22,7 +22,7 @@ class productController {
             const products = await productRepository.getAllProduct();
             res.json(products);
         } catch (err) {
-            throw new Error("Unable to fetch products")
+            throw new Error("Unable to fetch products");
         }
     });
 
