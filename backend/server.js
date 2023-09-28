@@ -6,15 +6,22 @@ import cookieParser from "cookie-parser";
 import productRoutes from "./routes/productRoute.js";
 import userRoutes from "./routes/userRoute.js";
 import { notFound, errorHandler } from "./middleware/errorHandler.js";
+import rateLimit from "express-rate-limit";
 
 const port = process.env.PORT || 5000;
 
-// Your database connection URL
 const dbUrl = process.env.DATABASE_URL;
+
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 10
+})
 
 connectDB(dbUrl)
 
 const app = express();
+
+app.use(limiter)
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
