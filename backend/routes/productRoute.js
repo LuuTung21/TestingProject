@@ -1,6 +1,7 @@
 import express from "express";
 import productController from "../controllers/productController.js";
 import { protect } from "../middleware/authMiddleware.js";
+import cacheMiddleware from "../middleware/cacheMiddleware.js"
 
 const router = express.Router();
 
@@ -8,10 +9,10 @@ const router = express.Router();
 router.post("/", productController.createProduct);
 
 // Get All Products
-router.get("/allProducts", productController.getAllProduct);
+router.get("/allProducts", cacheMiddleware(60), productController.getAllProduct);
 
 // Get Specific Product
-router.get("/", productController.getProductById);
+router.get("/", cacheMiddleware(60), productController.getProductById);
 
 // Update Product
 router.put("/", protect, productController.updateProduct);

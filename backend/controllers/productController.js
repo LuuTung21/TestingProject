@@ -1,5 +1,6 @@
 import productRepository from "../repositories/productRepository.js";
 import asyncHandler from "express-async-handler";
+import cache from "memory-cache"
 
 // @Desc Create product
 // Route POST /api/products
@@ -8,6 +9,7 @@ class productController {
     createProduct = asyncHandler(async (req, res) => {
         try {
             const product = await productRepository.createProduct(req.body);
+            cache.clear();
             res.status(201).json(product);
         } catch (err) {
             throw new Error(err.message);
@@ -48,6 +50,7 @@ class productController {
             if (!updatedProduct) {
                 res.status(401).json({ error: "Product not found" });
             };
+            cache.clear()
             res.json(updatedProduct);
         } catch (err) {
             throw new Error(err.message);
